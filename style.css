@@ -1,0 +1,134 @@
+body {
+    background-color: #e38bbf !important;
+    text-decoration: none !important;
+}
+
+a {
+    color: #bc2c79 !important;
+    text-decoration: none !important;
+
+}
+
+a:hover {
+    color: #000 !important;
+    text-decoration: none !important;
+}
+
+button {
+    font-size: 24px;
+    text-align: center;
+    cursor: pointer;
+    outline: none;
+    color: #fff;
+    background-color: #5f5fb3;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #251d3f;
+    color: #000000;
+    display: flex;
+}
+
+button:hover {
+    background-color: #3131a7;
+}
+
+button:focus {
+    background-color: #4a4a8a;
+    box-shadow: 0 5px #221a36;
+    transform: translateY(4px);
+}
+
+#hiddenBlock {
+    display: none;
+}
+
+/*  Шапка */
+.header {
+    background-color: #bc2c79 !important;
+}
+
+
+.navcont {
+    background-color: #e38bbf !important;
+
+}
+
+.navcont:hover {
+    background-color: #F4DBDB;
+    border: 2px solid #CD4662;
+    border-radius: 8px;
+    color: black;
+}
+
+h2 {
+    background-color: #bc2c79;
+}
+
+.link-list {
+    display: flex;
+    order: 0;
+}
+
+.table-container {
+    display: flex;
+    order: 1
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Калькулятор */
+
+.calc {
+    border: 1px solid #4e3030;
+    border-radius: 5px;
+}
+
+label {
+    display: block;
+
+}
+
+input[type="number"] {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+select {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    display: none; /* Скрываем селект по умолчанию */
+}
+
+input[type="checkbox"] {
+    display: none; /* Скрываем чекбокс по умолчанию */
+}
+
+#result {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* подвал */
+footer {
+    background-color: #c61f6a;
+}
+
+@media(max-width:769px) {
+
+    .link-list {
+        order: 0;
+    }
+
+    .table-container {
+        order: -2;
+    }
+    
+    .calc {
+        order: -1;
+    }
+}
