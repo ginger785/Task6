@@ -73,6 +73,11 @@
                         price = parseInt(radio.value);
                     }
                 });
+                if (quantity <= 0) {
+                    resultDiv.textContent = "Количество не может быть отрицательным или равным нулю.";
+                    resultDiv.style.color = "red";
+                    return;
+                }
 
                 price += parseInt(optionSelect.value);
 
