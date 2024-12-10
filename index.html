@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор стоимости заказа</title>
+    <title>Калькулятор стоимости автомобилей</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" 
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -13,42 +13,39 @@
         <h1>Калькулятор стоимости заказа</h1>
         
         <div class="calc-input-group">
-            <label for="quantity">Количество:</label>
+            <label for="quantity">Количество автомобилей:</label>
             <input type="number" id="quantity" min="1" value="1">
         </div>
 
         <div class="calc-input-group">
-            <label>Автомобиль:</label>
-            <div class="calc-radio-group">
-                <input type="radio" id="service1" name="service" value="12500000" checked>
-                <label for="service1">BMW M8 Competition (12 500 000 руб.)</label>
-            </div>
-            <div class="calc-radio-group">
-                <input type="radio" id="service2" name="service" value="9900000">
-                <label for="service2">Mercedes-Benz AMG GT 63 S (9 900 000 руб.)</label>
-            </div>
-            <div class="calc-radio-group">
-                <input type="radio" id="service3" name="service" value="35000000">
-                <label for="service3">Porsche 911 GT3 RS (35 000 000 руб.)</label>
-            </div>
-            <div class="calc-radio-group">
-                <input type="radio" id="service4" name="service" value="30000000">
-                <label for="service4">Ferrari F8 Tributo (30 000 000 руб.)</label>
-            </div>
-        </div>
-
-        <div class="calc-input-group">
-            <label for="option">Комплектация:</label>
-            <select id="option">
-                <option value="0">Без комплектации</option>
-                <option value="1000000">Luxury (+1 000 000 руб.)</option>
-                <option value="500000">Комфорт (+500 000 руб.)</option>
+            <label>Выберите автомобиль:</label>
+            <select id="productType">
+                <option value="12500000" data-options="none" data-property="none">BMW M8 Competition (12 500 000 руб.)</option>
+                <option value="9900000" data-options="options" data-property="none">Mercedes-Benz AMG GT 63 S (9 900 000 руб.)</option>
+                <option value="35000000" data-options="none" data-property="property">Porsche 911 GT3 RS (35 000 000 руб.)</option>
+                <option value="30000000" data-options="options" data-property="property">Ferrari F8 Tributo (30 000 000 руб.)</option>
             </select>
         </div>
 
-        <div class="calc-input-group">
+        <div class="calc-input-group" id="optionsGroup" style="display: none;">
+            <label>Выберите опцию:</label>
+            <div class="form-check">
+                <input type="radio" id="option1" name="option" class="form-check-input" value="0" checked>
+                <label for="option1" class="form-check-label">Без опции</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="option2" name="option" class="form-check-input" value="1000000">
+                <label for="option2" class="form-check-label">Luxury (+1 000 000 руб.)</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" id="option3" name="option" class="form-check-input" value="500000">
+                <label for="option3" class="form-check-label">Комфорт (+500 000 руб.)</label>
+            </div>
+        </div>
+
+        <div class="calc-input-group" id="propertyGroup" style="display: none;">
             <input type="checkbox" id="property" value="100000">
-            <label for="property">Каско (+100 000 руб.)</label>
+            <label for="property">КАСКО (+100 000 руб.)</label>
         </div>
 
         <button id="calculate" class="btn btn-primary">Рассчитать</button>
@@ -58,39 +55,56 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const quantityInput = document.getElementById('quantity');
-            const serviceRadios = document.querySelectorAll('input[name="service"]');
-            const optionSelect = document.getElementById('option');
+            const productTypeSelect = document.getElementById('productType');
+            const optionsGroup = document.getElementById('optionsGroup');
+            const propertyGroup = document.getElementById('propertyGroup');
             const propertyCheckbox = document.getElementById('property');
             const calculateButton = document.getElementById('calculate');
             const resultDiv = document.getElementById('result');
+            const optionRadios = document.querySelectorAll('input[name="option"]');
+
+            function updateVisibility() {
+                const selectedType = productTypeSelect.selectedOptions[0];
+                const options = selectedType.getAttribute('data-options');
+                const property = selectedType.getAttribute('data-property');
+
+                // Скрываем или показываем блоки в зависимости от атрибутов data-options и data-property
+                optionsGroup.style.display = options === "options" ? "block" : "none";
+                propertyGroup.style.display = property === "property" ? "block" : "none";
+            }
 
             function calculateCost() {
                 const quantity = parseInt(quantityInput.value);
-                let price = 0;
-
-                serviceRadios.forEach(radio => {
-                    if (radio.checked) {
-                        price = parseInt(radio.value);
-                    }
-                });
                 if (quantity <= 0) {
                     resultDiv.textContent = "Количество не может быть отрицательным или равным нулю.";
                     resultDiv.style.color = "red";
                     return;
                 }
 
-                price += parseInt(optionSelect.value);
+                const basePrice = parseInt(productTypeSelect.value);
+                let totalPrice = basePrice * quantity;
 
-                // Обработка чекбокса
-                if (propertyCheckbox.checked) {
-                    price += parseInt(propertyCheckbox.value); // Если чекбокс выбран, добавляем его стоимость
+                if (optionsGroup.style.display === "block") {
+                    optionRadios.forEach(radio => {
+                        if (radio.checked) {
+                            totalPrice += parseInt(radio.value) * quantity;
+                        }
+                    });
                 }
 
-                const totalCost = quantity * price;
-                resultDiv.textContent = `Стоимость заказа: ${totalCost.toLocaleString()} руб.`;
+                if (propertyGroup.style.display === "block" && propertyCheckbox.checked) {
+                    totalPrice += parseInt(propertyCheckbox.value) * quantity;
+                }
+
+                resultDiv.textContent = `Стоимость заказа: ${totalPrice.toLocaleString()} руб.`;
+                resultDiv.style.color = "black";
             }
 
+            productTypeSelect.addEventListener('change', updateVisibility);
             calculateButton.addEventListener('click', calculateCost);
+
+            // Инициализация видимости при загрузке
+            updateVisibility();
         });
     </script>
 </body>
