@@ -10,7 +10,7 @@
 </head>
 <body>
     <div class="calc-container">
-        <h1>Калькулятор стоимости заказа</h1>
+        <h1>Калькулятор стоимости автомобилей</h1>
         
         <div class="calc-input-group">
             <label for="quantity">Количество автомобилей:</label>
@@ -48,7 +48,6 @@
             <label for="property">КАСКО (+100 000 руб.)</label>
         </div>
 
-        <button id="calculate" class="btn btn-primary">Рассчитать</button>
         <div id="result" class="mt-3"></div>
     </div>
 
@@ -59,7 +58,6 @@
             const optionsGroup = document.getElementById('optionsGroup');
             const propertyGroup = document.getElementById('propertyGroup');
             const propertyCheckbox = document.getElementById('property');
-            const calculateButton = document.getElementById('calculate');
             const resultDiv = document.getElementById('result');
             const optionRadios = document.querySelectorAll('input[name="option"]');
 
@@ -68,7 +66,6 @@
                 const options = selectedType.getAttribute('data-options');
                 const property = selectedType.getAttribute('data-property');
 
-                // Скрываем или показываем блоки в зависимости от атрибутов data-options и data-property
                 optionsGroup.style.display = options === "options" ? "block" : "none";
                 propertyGroup.style.display = property === "property" ? "block" : "none";
             }
@@ -100,11 +97,18 @@
                 resultDiv.style.color = "black";
             }
 
-            productTypeSelect.addEventListener('change', updateVisibility);
-            calculateButton.addEventListener('click', calculateCost);
+            // Добавляем события для всех элементов
+            quantityInput.addEventListener('input', calculateCost);
+            productTypeSelect.addEventListener('change', () => {
+                updateVisibility();
+                calculateCost();
+            });
+            propertyCheckbox.addEventListener('change', calculateCost);
+            optionRadios.forEach(radio => radio.addEventListener('change', calculateCost));
 
-            // Инициализация видимости при загрузке
+            // Инициализация видимости и расчёта при загрузке
             updateVisibility();
+            calculateCost();
         });
     </script>
 </body>
